@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -15,24 +14,30 @@ func main() {
 	}
 	hosts := args[1:]
 	fmt.Println("Hosts received:", len(hosts))
+	validCount := 0
+	invalidCount := 0
 	for _, host := range hosts {
 		if err := validateHost(host); err != nil {
 			fmt.Printf("Error: %v\n", err)
+			invalidCount++
 			continue
 		}
 		fmt.Printf("Host: %s\n", host)
+		validCount++
 	}
+	fmt.Printf("Valid hosts: %d\n", validCount)
+	fmt.Printf("Invalid hosts: %d\n", invalidCount)
 }
 
 func validateHost(host string) error {
 	if strings.TrimSpace(host) == "" {
-		return errors.New("invalid host: empty string")
+		return fmt.Errorf("invalid host \"%s\": empty string", host)
 	}
 	if strings.Contains(host, " ") {
-		return errors.New("invalid host: contains spaces")
+		return fmt.Errorf("invalid host \"%s\": contains spaces", host)
 	}
 	if !strings.Contains(host, ".") {
-		return errors.New("invalid host: missing dot")
+		return fmt.Errorf("invalid host \"%s\": missing dot", host)
 	}
 	return nil
 }
