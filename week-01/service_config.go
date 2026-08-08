@@ -33,4 +33,17 @@ func main() {
 	if activeFlags&FlagAuth != 0 {
 		fmt.Println("Authentication is enabled")
 	}
+	var err error = nil
+
+	if true {
+		value, err := someFunction()
+		fmt.Printf("Value inside if: %s\n", value)
+		fmt.Printf("Error inside if: %v\n", err)
+	}
+
+	fmt.Printf("Error after if: %v\n", err)
+}
+
+func someFunction() (string, error) {
+	return "failed", fmt.Errorf("validation error")
 }
