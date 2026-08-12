@@ -36,4 +36,15 @@ func main() {
 
 		fmt.Printf("Parsed port: %d\n", port)
 	}
+	hostname := "café-server-01"
+	fmt.Println("len:", len(hostname))
+
+	for i, r := range hostname {
+		fmt.Printf("index=%d rune=%c\n", i, r)
+	}
+
+	for i := 0; i < len(hostname); i++ {
+		fmt.Printf("byte[%d]=%v\n", i, hostname[i])
+	}
+
 }
