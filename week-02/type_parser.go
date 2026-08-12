@@ -47,4 +47,8 @@ func main() {
 		fmt.Printf("byte[%d]=%v\n", i, hostname[i])
 	}
 
+	var smallCounter int8 = 120
+	smallCounter += 10
+	fmt.Println("smallCounter after overflow:", smallCounter)
+
 }
