@@ -38,4 +38,14 @@ func main() {
 			server.Healthy,
 		)
 	}
+	var brokenRegistry map[string]Server
+
+	server, exists := brokenRegistry["node-1"]
+	fmt.Printf("Read from nil map -> server: %+v, exists: %t\n", server, exists)
+
+	brokenRegistry["node-1"] = Server{
+		Host:    "test",
+		Port:    1234,
+		Healthy: true,
+	}
 }
