@@ -19,6 +19,10 @@ func parsePort(raw string) (int, error) {
 	return port, nil
 }
 
+func markUnhealthy(s Server) {
+	s.Healthy = false
+}
+
 func main() {
 	tests := []string{
 		"8080",

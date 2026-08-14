@@ -8,6 +8,14 @@ type Server struct {
 	Healthy bool
 }
 
+func markUnhealthy(s Server) {
+	s.Healthy = false
+}
+
+func markUnhealthyPtr(s *Server) {
+	s.Healthy = false
+}
+
 func main() {
 	registry := make(map[string]Server)
 
@@ -38,6 +46,17 @@ func main() {
 			server.Healthy,
 		)
 	}
+
+	markUnhealthy(registry["node-1"])
+	fmt.Printf("After markUnhealthy: %+v\n", registry["node-1"])
+
+	server := registry["node-1"]
+	markUnhealthyPtr(&server)
+
+	registry["node-1"] = server
+
+	fmt.Printf("After markUnhealthyPtr: %+v\n", registry["node-1"])
+
 	var brokenRegistry map[string]Server
 
 	server, exists := brokenRegistry["node-1"]
