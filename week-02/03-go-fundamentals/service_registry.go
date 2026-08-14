@@ -84,6 +84,7 @@ func main() {
 	server, exists := brokenRegistry["node-1"]
 	fmt.Printf("Read from nil map -> server: %+v, exists: %t\n", server, exists)
 
+	// Reto 2 — INTENCIONAL: escribir en un nil map provoca panic.
 	brokenRegistry["node-1"] = Server{
 		Host:    "test",
 		Port:    1234,
