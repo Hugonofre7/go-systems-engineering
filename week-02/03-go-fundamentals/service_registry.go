@@ -19,6 +19,28 @@ func markUnhealthyPtr(s *Server) {
 func main() {
 	registry := make(map[string]Server)
 
+	servers := []Server{
+		{
+			Host:    "server-01.example.com",
+			Port:    8080,
+			Healthy: true,
+		},
+		{
+			Host:    "server-02.example.com",
+			Port:    8081,
+			Healthy: false,
+		},
+		{
+			Host:    "server-03.example.com",
+			Port:    8082,
+			Healthy: true,
+		},
+	}
+
+	unhealthyHosts := healthCheck(servers)
+
+	fmt.Println("Unhealthy hosts:", unhealthyHosts)
+
 	registry["node-1"] = Server{
 		Host:    "server-01.example.com",
 		Port:    8080,
@@ -67,4 +89,15 @@ func main() {
 		Port:    1234,
 		Healthy: true,
 	}
+}
+
+func healthCheck(servers []Server) []string {
+	var unhealthy []string
+
+	for _, s := range servers {
+		if !s.Healthy {
+			unhealthy = append(unhealthy, s.Host)
+		}
+	}
+	return unhealthy
 }
