@@ -32,6 +32,12 @@ func main() {
 		fmt.Printf("Recovered error: %v\n", err)
 	}
 
+	err = retry(dangerousOperation, 3)
+
+	if err != nil {
+		fmt.Printf("Final retry error: %v\n", err)
+	}
+
 }
 
 func makeUnreliableOperation() func() error {
@@ -48,7 +54,7 @@ func makeUnreliableOperation() func() error {
 func retry(op func() error, attempts int) error {
 	var lastErr error
 	for i := 0; i < attempts; i++ {
-		if err := op(); err != nil {
+		if err := runOperation(op); err != nil {
 			lastErr = err
 			fmt.Printf("intento %d: %v\n", i+1, err)
 			continue
@@ -56,6 +62,16 @@ func retry(op func() error, attempts int) error {
 		return nil
 	}
 	return lastErr
+}
+
+func runOperation(op func() error) (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("panic recuperado: %v", r)
+		}
+	}()
+
+	return op()
 }
 
 func connectToDatabase(name string) error {
@@ -77,4 +93,8 @@ func safeOperation() (err error) {
 	}()
 
 	panic("fallo catastrófico simulado")
+}
+
+func dangerousOperation() error {
+	panic("fallo catastrófico en operación externa")
 }
