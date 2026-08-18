@@ -25,6 +25,13 @@ func main() {
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 	}
+
+	err = safeOperation()
+
+	if err != nil {
+		fmt.Printf("Recovered error: %v\n", err)
+	}
+
 }
 
 func makeUnreliableOperation() func() error {
@@ -60,4 +67,14 @@ func connectToDatabase(name string) error {
 		return fmt.Errorf("conexión rechazada")
 	}
 	return nil
+}
+
+func safeOperation() (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("recuperado de panic: %v", r)
+		}
+	}()
+
+	panic("fallo catastrófico simulado")
 }
