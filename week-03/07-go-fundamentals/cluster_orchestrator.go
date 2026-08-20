@@ -28,6 +28,20 @@ type StaticResource struct {
 	Name string
 }
 
+func findNode(id string) *Node {
+	if id == "unknown" {
+		return nil
+	}
+
+	return &Node{
+		ID: id,
+	}
+}
+
+func getResource(id string) Resource {
+	return findNode(id)
+}
+
 func (s StaticResource) Start() error {
 	fmt.Printf("Starting static resource %s\n", s.Name)
 	return nil
@@ -85,4 +99,8 @@ func main() {
 			fmt.Printf("Lifecycle error: %v\n", err)
 		}
 	}
+
+	r := getResource("unknown")
+
+	fmt.Println("Resource is nil:", r == nil)
 }
