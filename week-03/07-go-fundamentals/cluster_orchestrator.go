@@ -42,6 +42,19 @@ func getResource(id string) Resource {
 	return findNode(id)
 }
 
+func describe(r Resource) {
+	switch v := r.(type) {
+	case *Node:
+		fmt.Printf("Node resource: %s\n", v.ID)
+
+	case *Container:
+		fmt.Printf("Container resource: %s\n", v.ImageName)
+
+	default:
+		fmt.Println("Unknown resource type")
+	}
+}
+
 func (s StaticResource) Start() error {
 	fmt.Printf("Starting static resource %s\n", s.Name)
 	return nil
@@ -98,6 +111,10 @@ func main() {
 		if err := manageLifecycle(resource); err != nil {
 			fmt.Printf("Lifecycle error: %v\n", err)
 		}
+	}
+
+	for _, resource := range resources {
+		describe(resource)
 	}
 
 	r := getResource("unknown")
