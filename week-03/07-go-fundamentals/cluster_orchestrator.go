@@ -24,6 +24,19 @@ func (n *Node) Stop() error {
 type Container struct {
 	ImageName string
 }
+type StaticResource struct {
+	Name string
+}
+
+func (s StaticResource) Start() error {
+	fmt.Printf("Starting static resource %s\n", s.Name)
+	return nil
+}
+
+func (s StaticResource) Stop() error {
+	fmt.Printf("Stopping static resource %s\n", s.Name)
+	return nil
+}
 
 func (c *Container) Start() error {
 	fmt.Printf("Starting container %s\n", c.ImageName)
@@ -52,9 +65,19 @@ func main() {
 		ImageName: "nginx:latest",
 	}
 
+	staticValue := StaticResource{
+		Name: "config-map",
+	}
+
+	staticPointer := &StaticResource{
+		Name: "config-map",
+	}
+
 	resources := []Resource{
 		node,
 		container,
+		staticValue,
+		staticPointer,
 	}
 
 	for _, resource := range resources {
