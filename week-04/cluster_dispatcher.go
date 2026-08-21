@@ -9,6 +9,16 @@ func healthCheckWorker(id int, jobs <-chan string, results chan<- string) {
 	}
 }
 
+func deadlockDemo() {
+	ch := make(chan string)
+
+	//go func() {
+	//	fmt.Println(<-ch)
+	//}()
+
+	ch <- "hola"
+}
+
 func main() {
 	jobs := make(chan string)
 	results := make(chan string)
@@ -25,4 +35,5 @@ func main() {
 	for i := 0; i < 3; i++ {
 		fmt.Println(<-results)
 	}
+	deadlockDemo()
 }
