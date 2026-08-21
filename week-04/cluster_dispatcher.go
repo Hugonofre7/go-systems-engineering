@@ -53,4 +53,19 @@ func main() {
 		fmt.Println(<-results)
 	}
 	//deadlockDemo()
+
+	urgentJobs := make(chan string, 1)
+	select {
+	case job := <-urgentJobs:
+		fmt.Println("trabajo urgente:", job)
+	default:
+		fmt.Println("no hay trabajos urgentes, continuando con trabajo normal")
+	}
+	urgentJobs <- "reinicio de emergencia"
+	select {
+	case job := <-urgentJobs:
+		fmt.Println("trabajo urgente:", job)
+	default:
+		fmt.Println("no hay trabajos urgentes, continuando con trabajo normal")
+	}
 }
