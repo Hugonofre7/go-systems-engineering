@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"runtime"
+	"time"
+)
 
 func healthCheckWorker(id int, jobs <-chan string, results chan<- string) {
 	for nodeName := range jobs {
@@ -19,9 +23,22 @@ func deadlockDemo() {
 	ch <- "hola"
 }
 
+func leakyWorker(results chan<- string) {
+	results <- "trabajo completado"
+}
+
 func main() {
-	jobs := make(chan string)
 	results := make(chan string)
+	leakyResults := make(chan string)
+
+	fmt.Println("Goroutines antes:", runtime.NumGoroutine())
+
+	go leakyWorker(leakyResults)
+	time.Sleep(100 * time.Millisecond)
+
+	fmt.Println("Goroutines después:", runtime.NumGoroutine())
+
+	jobs := make(chan string)
 
 	go healthCheckWorker(1, jobs, results)
 
@@ -35,5 +52,5 @@ func main() {
 	for i := 0; i < 3; i++ {
 		fmt.Println(<-results)
 	}
-	deadlockDemo()
+	//deadlockDemo()
 }
