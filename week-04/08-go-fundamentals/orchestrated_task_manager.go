@@ -24,18 +24,23 @@ func longRunningTask(id int, jobID string, ctx context.Context, result chan<- st
 }
 
 func main() {
-	ctx, cancel := context.WithTimeout(
-		context.Background(),
-		1500*time.Millisecond,
-	)
+	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
+
 	result := make(chan string)
 
 	for i := 1; i <= 3; i++ {
 		go longRunningTask(i, fmt.Sprintf("job-%d", i), ctx, result)
 	}
 
-	for i := 0; i < 3; i++ {
+	//for i := 0; i < 3; i++ {
+	//	fmt.Println(<-result)
+	//}
+	firstResult := <-result
+	fmt.Println(firstResult)
+
+	cancel()
+	for i := 0; i < 2; i++ {
 		fmt.Println(<-result)
 	}
 }
