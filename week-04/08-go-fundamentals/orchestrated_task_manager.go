@@ -5,12 +5,12 @@ import (
 	"time"
 )
 
-func longRunningTask(id int, done <-chan struct{}, result chan<- string) {
+func longRunningTask(id int, jobID string, done <-chan struct{}, result chan<- string) {
 	select {
-	case <-time.After(3 * time.Second):
-		result <- fmt.Sprintf("task %d: trabajo completado", id)
+	case <-time.After(time.Duration(id) * time.Second):
+		result <- fmt.Sprintf("worker %d: job %s completado", id, jobID)
 	case <-done:
-		result <- fmt.Sprintf("task %d: cancelado", id)
+		result <- fmt.Sprintf("worker %d: job %s cancelado", id, jobID)
 	}
 }
 
@@ -18,12 +18,16 @@ func main() {
 	done := make(chan struct{})
 	result := make(chan string)
 
-	go longRunningTask(1, done, result)
+	for i := 1; i <= 3; i++ {
+		go longRunningTask(i, fmt.Sprintf("job_%d", i), done, result)
+	}
 
 	go func() {
-		time.Sleep(1 * time.Second)
+		time.Sleep(1500 * time.Millisecond)
 		close(done)
 	}()
 
-	fmt.Println(<-result)
+	for i := 0; i < 3; i++ {
+		fmt.Println(<-result)
+	}
 }
